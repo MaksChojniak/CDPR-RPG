@@ -8,7 +8,7 @@ namespace MChojniak.Input
 {
     public class InputManager : MonoBehaviour
     {
-        public Dictionary<string, InputEventBase> Events;
+        public UnityDictionary<string, InputEventBase> Events;
 
         InputSystem_Actions _inputSystem;
         Dictionary<string, InputAction> _inputActions;
