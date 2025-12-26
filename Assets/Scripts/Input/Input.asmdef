@@ -1,0 +1,18 @@
+{
+    "name": "Input",
+    "rootNamespace": "MChojniak.Input",
+    "references": [
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:813a4fdbbe06caa459e5946601d27b7d",
+        "GUID:d3726a97ff30842448dbc8a469c1e09a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
