@@ -6,10 +6,9 @@ using System;
 
 namespace MChojniak.Collections.Editor
 {   
-    [CustomPropertyDrawer(typeof(ISerializableDictionary), true)]
-    public class UnityDictionaryPropertyDrawer : PropertyDrawer 
+    [CustomPropertyDrawer(typeof(ISerializableHashSet), true)]
+    public class UnityHashSetPropertyDrawer : PropertyDrawer 
     {
-        SerializedProperty keysProperty;
         SerializedProperty valuesProperty;
 
         float lineHeight;
@@ -19,7 +18,6 @@ namespace MChojniak.Collections.Editor
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            keysProperty = property.FindPropertyRelative("_serializedKeys");
             valuesProperty = property.FindPropertyRelative("_serializedValues");
 
             lineHeight = EditorGUIUtility.singleLineHeight;
@@ -27,12 +25,12 @@ namespace MChojniak.Collections.Editor
 
             EditorGUI.BeginProperty(position, label, property);
 
-            list = DrawDictionary(position, property, label, keysProperty, valuesProperty);
+            list = DrawHashSet(position, property, label, valuesProperty);
             if(list is null)
             {
                 property.isExpanded = EditorGUI.Foldout(new Rect(position.x, position.y, position.width, lineHeight), property.isExpanded, label, true);
                 if(property.isExpanded)
-                    EditorGUI.LabelField(new Rect(position.x, position.y + lineHeight + verticalSpacing, position.width, lineHeight), "Dictionary is Empty");
+                    EditorGUI.LabelField(new Rect(position.x, position.y + lineHeight + verticalSpacing, position.width, lineHeight), "HashSet is Empty");
             }
             else
             {
@@ -48,19 +46,19 @@ namespace MChojniak.Collections.Editor
             return list.GetHeight();
         }
 
-        static ReorderableList DrawDictionary(Rect position, SerializedProperty property, GUIContent label, SerializedProperty keysProperty, SerializedProperty valuesProperty)
+        static ReorderableList DrawHashSet(Rect position, SerializedProperty property, GUIContent label, SerializedProperty valuesProperty)
         {
             if (property == null) 
                 return null;
 
-            if (keysProperty == null || valuesProperty == null)
+            if (valuesProperty == null)
                 return null;
 
-            var list = new ReorderableList(property.serializedObject, keysProperty, false, true, true, true)
+            var list = new ReorderableList(property.serializedObject, valuesProperty, false, true, true, true)
             {
                 elementHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing
             };
-            list.drawNoneElementCallback += rect =>  EditorGUI.LabelField(rect, "Dictionary is Empty");
+            list.drawNoneElementCallback += rect =>  EditorGUI.LabelField(rect, "HashSet is Empty");
 
             list.drawHeaderCallback = (Rect rect) =>
             {
@@ -69,19 +67,13 @@ namespace MChojniak.Collections.Editor
 
             list.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
             {
-                var key = keysProperty.GetArrayElementAtIndex(index);
                 var value = valuesProperty.GetArrayElementAtIndex(index);
 
                 float lineHeight = EditorGUIUtility.singleLineHeight;
                 float spacing = EditorGUIUtility.standardVerticalSpacing;
 
                 Rect r = new Rect(rect.x, rect.y + 2, rect.width, lineHeight);
-                float half = (rect.width - 8) / 2f;
-                Rect keyRect = new Rect(r.x, r.y, half, lineHeight);
-                Rect valRect = new Rect(r.x + half + 8, r.y, half, lineHeight);
-
-                EditorGUI.PropertyField(keyRect, key, GUIContent.none);
-                EditorGUI.PropertyField(valRect, value, GUIContent.none);
+                EditorGUI.PropertyField(r, value, GUIContent.none);
             };
 
             list.onAddCallback = (ReorderableList l) =>
@@ -89,14 +81,10 @@ namespace MChojniak.Collections.Editor
                 var so = property.serializedObject;
                 so.Update();
 
-                int index = keysProperty.arraySize;
-                keysProperty.arraySize++;
+                int index = valuesProperty.arraySize;
                 valuesProperty.arraySize++;
 
-                var newKey = keysProperty.GetArrayElementAtIndex(index);
                 var newValue = valuesProperty.GetArrayElementAtIndex(index);
-
-                newKey.ClearSerializedProperty();
                 newValue.ClearSerializedProperty();
 
                 so.ApplyModifiedProperties();
@@ -108,10 +96,9 @@ namespace MChojniak.Collections.Editor
                 if (index < 0) 
                     return;
                 
-                keysProperty.DeleteArrayElementAtIndex(index);
                 valuesProperty.DeleteArrayElementAtIndex(index);
 
-                l.index = Mathf.Max(0, keysProperty.arraySize - 1);
+                l.index = Mathf.Max(0, valuesProperty.arraySize - 1);
 
                 property.serializedObject.ApplyModifiedProperties();
             };
