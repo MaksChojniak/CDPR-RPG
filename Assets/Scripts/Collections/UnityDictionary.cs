@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace MChojniak.Collections
 {
     [Serializable]
-    public class UnityDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializableCollections
+    public class UnityDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializableDictionary
     {
         [SerializeField] List<TKey> _serializedKeys = new();
         [SerializeField] List<TValue> _serializedValues = new();
@@ -32,7 +32,7 @@ namespace MChojniak.Collections
             int i = 0;
             foreach(var key in _serializedKeys)
             {
-                Add(key, _serializedValues[i]);
+                TryAdd(key, _serializedValues[i]);
 
                 i++;
             }
