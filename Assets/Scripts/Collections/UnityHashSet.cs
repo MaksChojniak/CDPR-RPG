@@ -11,6 +11,11 @@ namespace MChojniak.Collections
         [SerializeField] List<TValue> _serializedValues = new();
 
         public UnityHashSet() : base() {}
+        public UnityHashSet(IEnumerable<TValue> collection) : base(collection) { OnBeforeSerialize(); }
+        public UnityHashSet(IEqualityComparer<TValue> comparer) : base(comparer) { OnBeforeSerialize(); }
+        public UnityHashSet(int capacity) : base(capacity) { OnBeforeSerialize(); }
+        public UnityHashSet(IEnumerable<TValue> collection, IEqualityComparer<TValue> comparer) : base(collection, comparer) { OnBeforeSerialize(); }
+        public UnityHashSet(int capacity, IEqualityComparer<TValue> comparer) : base(capacity, comparer) { OnBeforeSerialize(); }
 
         public void OnBeforeSerialize() 
         { 

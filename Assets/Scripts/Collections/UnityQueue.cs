@@ -11,6 +11,8 @@ namespace MChojniak.Collections
         [SerializeField] List<TValue> _serializedValues = new();
 
         public UnityQueue() : base() {}
+        public UnityQueue(IEnumerable<TValue> collection) : base(collection) { OnBeforeSerialize(); }
+        public UnityQueue(int capacity) : base(capacity) { OnBeforeSerialize(); }
 
         public void OnBeforeSerialize() 
         { 

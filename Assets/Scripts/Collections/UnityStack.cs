@@ -12,6 +12,8 @@ namespace MChojniak.Collections
         [SerializeField] List<TValue> _serializedValues = new();
 
         public UnityStack() : base() {}
+        public UnityStack(IEnumerable<TValue> collection) : base(collection) { OnBeforeSerialize(); }
+        public UnityStack(int capacity) : base(capacity) { OnBeforeSerialize(); }
 
         public void OnBeforeSerialize() 
         { 
